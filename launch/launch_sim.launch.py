@@ -42,6 +42,7 @@ def generate_launch_description():
                                    '-entity', 'my_bot'],
                         output='screen')
 
+
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner.py",
@@ -53,6 +54,24 @@ def generate_launch_description():
         executable="spawner.py",
         arguments=["joint_broad"],
     )
+
+
+    # Code for delaying a node (I haven't tested how effective it is)
+    # 
+    # First add the below lines to imports
+    # from launch.actions import RegisterEventHandler
+    # from launch.event_handlers import OnProcessExit
+    #
+    # Then add the following below the current diff_drive_spawner
+    # delayed_diff_drive_spawner = RegisterEventHandler(
+    #     event_handler=OnProcessExit(
+    #         target_action=spawn_entity,
+    #         on_exit=[diff_drive_spawner],
+    #     )
+    # )
+    #
+    # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
+
 
 
     # Launch them all!

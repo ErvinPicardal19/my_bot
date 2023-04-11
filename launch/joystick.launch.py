@@ -14,9 +14,7 @@ def generate_launch_description():
     joy_node = Node(
             package='joy',
             executable='joy_node',
-            parameters=[joy_params, {'use_sim_time': use_sim_time}],
-            prefix=["sudo -E env \"PYTHONPATH=$PYTHONPATH\" \"LD_LIBRARY_PATH=$LD_LIBRARY_PATH\" \"PATH=$PATH\" \"USER=$USER\"  bash -c "],
-            shell=True,
+            parameters=[joy_params, {'use_sim_time': use_sim_time}]
          )
 
     teleop_node = Node(

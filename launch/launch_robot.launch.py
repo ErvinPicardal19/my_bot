@@ -8,7 +8,7 @@ from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command
 from launch.actions import RegisterEventHandler
-from launch.event_handlers import OnProcessStart
+from launch.event_handlers import OnProcessStart, OnProcessExit
 
 from launch_ros.actions import Node
 
@@ -80,6 +80,26 @@ def generate_launch_description():
             on_start=[joint_broad_spawner],
         )
     )
+    
+    rplidar_node = Node(
+            package='rplidar_ros',
+            executable='rplidar_composition',
+            output='screen',
+            parameters=[{
+                'serial_port': '/dev/ttyUSB0',
+                'frame_id': 'laser_frame',
+                'angle_compensate': True,
+                'scan_mode': 'Standard'
+            }]
+        )
+    
+    delayed_rplidar_node = RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=controller_manager,
+                on_exit=[rplidar_node],
+            )
+        )
+    
 
     # Code for delaying a node (I haven't tested how effective it is)
     # 
@@ -106,5 +126,6 @@ def generate_launch_description():
         twist_mux_node,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
-        delayed_joint_broad_spawner
+        delayed_joint_broad_spawner,
+        delayed_rplidar_node
     ])
